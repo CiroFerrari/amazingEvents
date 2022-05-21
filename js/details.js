@@ -23,7 +23,7 @@ function tomarDatos () {
                     <img src="${evento.image}" alt="">
                 </div>
                 <article class="details--article d-flex flex-column justify-content-center align-items-center">
-                    <h3>${evento.name}</h3>
+                    <h3 class="details--h3">${evento.name}</h3>
                     <div class="d-flex flex-column">
                         <p>Name: ${evento.name}</p>
                         <p>Date: ${evento.date}</p>

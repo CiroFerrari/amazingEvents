@@ -30,7 +30,7 @@ function filtrar () {
     if ( inputValue == "" && checkBoxesActivos.length == 0 ) {      // Filtra si input de búsqueda y checkboxes están vacíos
         impresionCards(contenidoCards);
         impresionCheckboxes(contenidoCards);
-    }
+        }
     else if ( inputValue != "" && checkBoxesActivos.length == 0){   // Filtra si input de búsqueda tiene valor y checkboxes están vacíos
         for ( let i = 0 ; i < contenidoCards.length ; i++) {
             if(contenidoCards[i].name.toLowerCase().trim().startsWith(inputValue)) {
@@ -38,7 +38,10 @@ function filtrar () {
             }
         }
         impresionCards(cardsBuscadas);
-    }
+        if(cardsBuscadas.length == 0) {
+            imprimirSinResultados();
+        }
+        }
     else if ( inputValue == "" && checkBoxesActivos.length != 0){   // Filtra si input de búsqueda está vacío y checkboxes están activos
         for (elemento of checkBoxesActivos){
             for ( let i = 0 ; i < contenidoCards.length ; i++) {
@@ -48,7 +51,10 @@ function filtrar () {
             }
         }
         impresionCards(cardsBuscadas);
-    }
+        if(cardsBuscadas.length == 0) {
+            imprimirSinResultados();
+        }
+        }
     else if ( inputValue != "" && checkBoxesActivos.length != 0){   // Filtra si input de búsqueda y checkboxes están activos
         for (elemento of checkBoxesActivos){
             for (let i = 0 ; i < contenidoCards.length ; i++) {
@@ -60,10 +66,14 @@ function filtrar () {
         for ( let i = 0 ; i < cardsBuscadas.length ; i++) {
             if(!(cardsBuscadas[i].name.toLowerCase().trim().startsWith(inputValue))) {
                 cardsBuscadas.splice(i, 1);
+                i--;
             }
         }
         impresionCards(cardsBuscadas);
-    }
+        if(cardsBuscadas.length == 0) {
+            imprimirSinResultados();
+        }
+        }
 }
 
 // Función para imprimir las Cards en base a un Array
@@ -78,8 +88,8 @@ function impresionCards(arrayImprimir){
                                 <h4 class="card-title text-center">${arrayImprimir[i].name}</h4>
                                 <p class="card-title text-center">${arrayImprimir[i].description}</p>
                                 <div class="mt-4 d-flex justify-content-around align-items-center">
-                                    <p class="card-text m-0">Precio: ${arrayImprimir[i].price}</p>
-                                    <a href="./sections/details.html" class="btn a-btn text-light">Ver más</a>
+                                    <p class="card-text m-0">Precio: $${arrayImprimir[i].price}</p>
+                                    <a href="./details.html?id=${i+1}" class="btn a-btn text-light">Ver más</a>
                                 </div>
                             </div>
                         </div>
@@ -127,4 +137,12 @@ function eventosFuturos(array) {
         }
     }
     return arrayFuturo;
+}
+
+// Función para mostrar un mensaje cuando el resultado de la búsqueda es nulo
+function imprimirSinResultados() {
+    let mensaje = document.createElement("div");
+        mensaje.innerHTML = `<p class="fs-5 text-center">Sin resultados para su búsqueda.</p>
+                        `   ;
+        divContenedorCards.appendChild(mensaje);   
 }

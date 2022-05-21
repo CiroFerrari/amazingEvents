@@ -71,7 +71,7 @@ header {
 
 h1 {
     color: #d90468;
-
+    margin:0px;
 }
 
 header a {
@@ -101,6 +101,7 @@ footer p {
     display: flex;
     align-items: center;
     margin-bottom: 0px;
+    font-size: 1.5rem;
 }
 
 footer figure {
@@ -313,6 +314,12 @@ article div p {
         font-size: 3rem;
     }
 
+    .form--checkboxes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
     main {
         height: 100%;
         display: flex;
@@ -352,7 +359,8 @@ article div p {
     }
 
     .contact--main {
-        height: 70vh;
+        height: 100%;
+        margin-bottom: 1.5rem;
     }
 
     .stats--main {
@@ -360,7 +368,7 @@ article div p {
     }
 
     .form-label {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .form-control {
@@ -372,9 +380,10 @@ article div p {
     }
 
     .a-btn {
-        height: 4rem;
-        width: 8rem;
-        font-size: 1.5rem;
+        height: 3rem;
+        width: 6rem;
+        font-size: 1.2rem;
+        
     } 
 
     ul li a {
@@ -384,6 +393,11 @@ article div p {
 
     .details--main {
         height: 65vh;
+    }
+
+    .details--h3 {
+        margin-top: .5rem;
+        margin-bottom: .2rem;
     }
 }
 
@@ -436,6 +450,12 @@ article div p {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items:flex-end;
+        
+    }
+
+    .input--search {
+        width: 75%;
     }
 
     .card {
@@ -485,5 +505,21 @@ article div p {
 
     .details--figure, .details--article {
         width: 90%;
+    }
+
+    footer {
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
+        padding: .5rem 2rem;
+        font-size: 1.5rem;
+    }
+
+    footer p {
+        font-size: 1rem;
+    }
+
+    footer figure {
+        margin-bottom: .5rem;
     }
 }
