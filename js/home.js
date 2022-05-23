@@ -8,7 +8,7 @@ let checkBoxesActivos = [];
 let categoriasFiltradas = [];
 
 // CREACIÓN DE ID PARA CADA CARD
-contenidoCards = crearID(contenidoCards);
+contenidoCards.map((evento, id) => evento.id = ++id);
 
 // IMPRESIÓN INICIAL DE CARDS Y CHECKBOXES
 filtrar();
@@ -31,13 +31,11 @@ function filtrar () {
         impresionCards(contenidoCards);
         impresionCheckboxes(contenidoCards);
         }
+
     else if ( inputValue != "" && checkBoxesActivos.length == 0){   // Filtra si input de búsqueda tiene valor y checkboxes están vacíos
-        for ( let i = 0 ; i < contenidoCards.length ; i++) {
-            if(contenidoCards[i].name.toLowerCase().trim().startsWith(inputValue)) {
-                cardsBuscadas.push(contenidoCards[i]);
-            }
-        }
+        cardsBuscadas = contenidoCards.filter( evento => evento.name.toLowerCase().trim().startsWith(inputValue));
         impresionCards(cardsBuscadas);
+
         if(cardsBuscadas.length == 0) {
             imprimirSinResultados();
         }
@@ -63,12 +61,7 @@ function filtrar () {
                 }
             }
         }
-        for ( let i = 0 ; i < cardsBuscadas.length ; i++) {
-            if(!(cardsBuscadas[i].name.toLowerCase().trim().startsWith(inputValue))) {
-                cardsBuscadas.splice(i, 1);
-                i--;
-            }
-        }
+        cardsBuscadas = cardsBuscadas.filter( evento => evento.name.toLowerCase().trim().startsWith(inputValue));
         impresionCards(cardsBuscadas);
         if(cardsBuscadas.length == 0) {
             imprimirSinResultados();
@@ -95,7 +88,7 @@ function impresionCards(arrayImprimir){
                         </div>
                         `   ;
         divContenedorCards.appendChild(card);
-    }    
+    } 
 }
 
 // Función para imprimir los checkboxes en base a las categorías de las Cards
@@ -128,17 +121,10 @@ function checkActivos() {
     return checkBoxesActivos;
 }
 
-function crearID(array) {
-    for ( let i = 0; i < array.length ; i++) {
-        array[i].id = i+1;
-    }
-    return array;
-}
-
 // Función para mostrar un mensaje cuando el resultado de la búsqueda es nulo
 function imprimirSinResultados() {
     let mensaje = document.createElement("div");
-        mensaje.innerHTML = `<p class="fs-5 text-center">Sin resultados para su búsqueda.</p>
+        mensaje.innerHTML = `<p class="fs-5 text-center mt-5">Sin resultados para su búsqueda.</p>
                         `   ;
         divContenedorCards.appendChild(mensaje);   
 }

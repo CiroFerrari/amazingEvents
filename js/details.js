@@ -1,9 +1,11 @@
 // DECLARACIÓN DE VARIABLES GLOBALES
 let divContenedorCards = document.getElementById("mainCards");  
 let contenidoCards = data.eventos;
+let fechaActual = data.fechaActual;
+
 
 // CREACIÓN DE ID PARA CADA CARD
-contenidoCards = crearID(contenidoCards);
+contenidoCards.map((evento, id) => evento.id = ++id);
 
 // TOMAR LOS DATOS DE LA CARD SELECCIONADA E IMPRIMIRLA EN PANTALLA
 tomarDatos();
@@ -17,7 +19,9 @@ function tomarDatos () {
     let evento = contenidoCards.find( function(evento) {
         return evento.id == selectedId;
     } )
-    
+    console.log(evento)
+    let assist = assistanceOrEstimate(evento);
+    console.log(assist)
     let card = `
                 <div class="details--figure d-flex flex-column justify-content-center align-items-center">
                     <img src="${evento.image}" alt="">
@@ -31,7 +35,7 @@ function tomarDatos () {
                         <p>Category: ${evento.category}</p>
                         <p>Place: ${evento.place}</p>
                         <p>Capacity: ${evento.capacity}</p>
-                        <p>Assistance or Estimate: ${evento.assistance}</p>
+                        <p>${assist}</p>
                         <p>Price: ${evento.price}</p>
                     </div>
                 </article>
@@ -40,10 +44,13 @@ function tomarDatos () {
     document.querySelector("#mainCards").innerHTML = card;
 }
 
-
-function crearID(array) {
-    for ( let i = 0; i < array.length ; i++) {
-        array[i].id = i+1;
+// Si el evento futuro imprimirá "Estimate: " y si es pasado imprimirá "Assistance: ". 
+function assistanceOrEstimate(evento) {
+    let assistEstimate = "";
+    if (evento.date > fechaActual) {
+        assistEstimate = "Estimate: " + evento.estimate;
+    } else {
+        assistEstimate = "Assistance: " + evento.assistance;
     }
-    return array;
+    return assistEstimate;
 }

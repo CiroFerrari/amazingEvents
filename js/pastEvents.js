@@ -8,6 +8,10 @@ let cardsBuscadas = [];
 let checkBoxesActivos = [];
 let categoriasFiltradas = [];
 
+// CREACIÓN DE ID PARA CADA CARD
+contenidoCards.map((evento, id) => evento.id = ++id);
+
+// FILTRAR EVENTOS PASADOS DEL TOTAL DE EVENTOS
 contenidoCards = eventosPasados(contenidoCards);
 
 // IMPRESIÓN INICIAL DE CARDS Y CHECKBOXES
@@ -32,11 +36,7 @@ function filtrar () {
         impresionCheckboxes(contenidoCards);
         }
     else if ( inputValue != "" && checkBoxesActivos.length == 0){   // Filtra si input de búsqueda tiene valor y checkboxes están vacíos
-        for ( let i = 0 ; i < contenidoCards.length ; i++) {
-            if(contenidoCards[i].name.toLowerCase().trim().startsWith(inputValue)) {
-                cardsBuscadas.push(contenidoCards[i]);
-            }
-        }
+        cardsBuscadas = contenidoCards.filter( evento => evento.name.toLowerCase().trim().startsWith(inputValue));
         impresionCards(cardsBuscadas);
         if(cardsBuscadas.length == 0) {
             imprimirSinResultados();
@@ -63,12 +63,7 @@ function filtrar () {
                 }
             }
         }
-        for ( let i = 0 ; i < cardsBuscadas.length ; i++) {
-            if(!(cardsBuscadas[i].name.toLowerCase().trim().startsWith(inputValue))) {
-                cardsBuscadas.splice(i, 1);
-                i--;
-            }
-        }
+        cardsBuscadas = cardsBuscadas.filter( evento => evento.name.toLowerCase().trim().startsWith(inputValue));
         impresionCards(cardsBuscadas);
         if(cardsBuscadas.length == 0) {
             imprimirSinResultados();
@@ -89,7 +84,7 @@ function impresionCards(arrayImprimir){
                                 <p class="card-title text-center">${arrayImprimir[i].description}</p>
                                 <div class="mt-4 d-flex justify-content-around align-items-center">
                                     <p class="card-text m-0">Precio: ${arrayImprimir[i].price}</p>
-                                    <a href="./details.html?id=${i+1}" class="btn a-btn text-light">Ver más</a>
+                                    <a href="./details.html?id=${arrayImprimir[i].id}" class="btn a-btn text-light">Ver más</a>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +137,7 @@ function eventosPasados(array) {
 // Función para mostrar un mensaje cuando el resultado de la búsqueda es nulo
 function imprimirSinResultados() {
     let mensaje = document.createElement("div");
-        mensaje.innerHTML = `<p class="fs-5 text-center">Sin resultados para su búsqueda.</p>
+        mensaje.innerHTML = `<p class="fs-5 text-center mt-5">Sin resultados para su búsqueda.</p>
                         `   ;
         divContenedorCards.appendChild(mensaje);   
 }
