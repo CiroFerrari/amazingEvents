@@ -83,7 +83,7 @@ function impresionCards(arrayImprimir){
                                 <h4 class="card-title text-center">${arrayImprimir[i].name}</h4>
                                 <p class="card-title text-center">${arrayImprimir[i].description}</p>
                                 <div class="mt-4 d-flex justify-content-around align-items-center">
-                                    <p class="card-text m-0">Precio: ${arrayImprimir[i].price}</p>
+                                    <p class="card-text m-0">Precio: $${arrayImprimir[i].price}</p>
                                     <a href="./details.html?id=${arrayImprimir[i]._id}" class="btn a-btn text-light">More Info</a>
                                 </div>
                             </div>

@@ -14,50 +14,43 @@ async function getDatafromAPI() {
     await fetch("https://amazing-events.herokuapp.com/api/events")
         .then(response => response.json())
         .then(json => data = json);
-    console.log(data)
+
     // Extraemos los eventos del Objeto "data"
     eventos = data.events;
     fechaActual = data.currentDate;
 
-    console.log("")
-    console.log("Tabla 1:")
+    // Creamos arrays separados para eventos futuros y eventos pasados
     eventosPasadosArray = eventosPasados(eventos);
     eventosFuturosArray = eventosFuturos(eventos);
 
-    let eventoConMayorAudiencia = audienciasCapacidad(eventosPasadosArray)[0];
-    console.log(eventoConMayorAudiencia)
+    // Resolvemos los datos para la Tabla 1
+    let eventoConMayorAudiencia = audienciasCapacidad(eventosPasadosArray)[0];      // Asistencia se calcula sólo para eventos pasados
 
-    let eventoConMenorAudiencia = audienciasCapacidad(eventosPasadosArray)[1];
-    console.log(eventoConMenorAudiencia)
+    let eventoConMenorAudiencia = audienciasCapacidad(eventosPasadosArray)[1];      // Asistencia se calcula sólo para eventos pasados
 
-    let eventoConMayorCapacidad = audienciasCapacidad(eventos)[2];
-    console.log(eventoConMayorCapacidad)
+    let eventoConMayorCapacidad = audienciasCapacidad(eventos)[2];                  // Capacidad se calcula para todos los eventos (pasados y futuros)
 
-    console.log("")
-    console.log("Tabla 2:");
-
+    //Creamos arrays para categorías futuras y pasadas
     let categoriasFuturas = [];
     categoriasFuturas = filterCategories(eventosFuturosArray);
-
+    
     let categoriasPasadas = [];
     categoriasPasadas = filterCategories(eventosPasadosArray);
-
+    
+    // Calculamos las estadísticas para la Tabla 2 - Eventos Futuros
     let upcomingStats = calculateStats(categoriasFuturas, eventosFuturosArray);
-    console.log("Upcoming Stats: ")
-    console.log(upcomingStats)
 
+    // Calculamos las estadísticas para la Tabla 3 - Eventos Pasados
     let pastStats = calculateStats(categoriasPasadas, eventosPasadosArray);
-    console.log("Past Stats: ")
-    console.log(pastStats)
 
 
-    // Función que me retorna el evento con mayor % de audiencia, con menor % de audiencia, y con mayor capacidad
+    // Función que me retorna el evento con mayor % de audiencia, con menor % de audiencia, y con mayor capacidad en base a un array
     function audienciasCapacidad(array) {
         let mayorAudiencia = 0;
         let menorAudiencia = 100000000;
         let mayorCapacidad = 0;
         let audienciaEvento = 0;
-        let eventoRetornar = [mayorAudiencia, menorAudiencia, mayorCapacidad];
+        let eventoRetornar = [mayorAudiencia, menorAudiencia, mayorCapacidad];  // Vamos a retornar un array que contenga los 3 resultados que nos interesan
         for (elemento of array) {
             audienciaEvento = Number(elemento.assistance) / Number(elemento.capacity)
             if (audienciaEvento > mayorAudiencia) {
@@ -72,18 +65,14 @@ async function getDatafromAPI() {
                 eventoRetornar[2] = elemento.name;
             }
         }
-        return eventoRetornar;
+        return eventoRetornar;  // De esta manera, recorremos sólo una vez el array, y en una sola función obtenemos los 3 resultados.
     }
 
 
     // Función que devuelve las categorías filtradas en base a un array
     function filterCategories(array) {
-        categoriasFiltradas = [];
-        for (elemento of array) {
-            categoriasFiltradas.push(elemento.category)
-        }
-        let eliminarRepetidos = [...new Set(categoriasFiltradas)]
-        return eliminarRepetidos;
+        let categoriasFiltradas = array.map(elemento => elemento.category);
+        return [...new Set(categoriasFiltradas)];
     }
 
     // Función que devuelve las estadisticas de Revenue y Attendance en base a un array de categorias y un array de eventos
@@ -91,10 +80,10 @@ async function getDatafromAPI() {
         let categoriesStats = [];
         let revenueCategoria = 0;
         let attendanceCategoria = 0;
-        let elementosEnCategoria = 0;
+        let elementosEnCategoria = 0;       // Dato para calcular el promedio en cada categoría
 
         for (categoria of arrayCategorias) {
-            revenueCategoria = 0;
+            revenueCategoria = 0;           // En cada categoría iniciamos seteando los valores en 0
             attendanceCategoria = 0;
             elementosEnCategoria = 0;
             for (elemento of arrayEventos) {
@@ -110,7 +99,7 @@ async function getDatafromAPI() {
                     }
                 }
             }
-            categoriesStats.push(
+            categoriesStats.push(               // Guardamos un Objeto con los 3 datos que nos interesan para cada categoría
                 {
                     category: categoria,
                     revenue: revenueCategoria / elementosEnCategoria,
@@ -118,7 +107,7 @@ async function getDatafromAPI() {
                 }
             )
         }
-        return categoriesStats;
+        return categoriesStats;     // Retorna un Arreglo que contiene Objetos con los datos calculados de cada categoría.
     }
 
     // Función para filtrar los eventos futuros en base a un Array
@@ -143,6 +132,7 @@ async function getDatafromAPI() {
         return arrayPasado;
     }
 
+    // Impresión de la Tabla 1 en base a los datos calculados
     imprimirTablaGeneral()
     function imprimirTablaGeneral() {
         let fila = document.createElement('tr')
@@ -154,70 +144,25 @@ async function getDatafromAPI() {
         divGeneralStats.appendChild(fila);
     }
 
+    // Impresión de la Tabla 2 y Tabla 3 en base a los resultados calculados
     imprimirTabla2y3(upcomingStats, pastStats)
-
-    function imprimirTabla2y3(arrayFuturo, arrayPasado) {
+    function imprimirTabla2y3(arrayFuturo, arrayPasado) {       // Se creó una función con 2 parámetros, en vez de 2 funciones (para eventos futuros y pasados)
         for (elemento of arrayFuturo) {
-            let fila = document.createElement('tr')
-            fila.innerHTML = `    
-                        <td>${elemento.category} </td>
-                        <td class="text-center">$${elemento.revenue.toFixed(2)} </td>
-                        <td class="text-center">%${elemento.attendance.toFixed(2)} </td>
-                        `
-            divUpcomingStats.appendChild(fila);
+            divUpcomingStats.appendChild(crearFila(elemento));
         }
         for (elemento of arrayPasado) {
-            let fila = document.createElement('tr')
-            fila.innerHTML = `    
-                    <td>${elemento.category} </td>
-                    <td class="text-center">$${elemento.revenue.toFixed(2)} </td>
-                    <td class="text-center">%${elemento.attendance.toFixed(2)} </td>
-                    `
-            divPastStats.appendChild(fila);
+            divPastStats.appendChild(crearFila(elemento));
         }
     }
 
-
-    /*
-        let revenuesFuturos = averageRevenues(eventosFuturosArray)
-        console.log("Revenues Futuros en $")
-        console.log(revenuesFuturos)
-        
-        // Función que devuelve el promedio de ingresos por evento
-        function averageRevenues (array) {
-            let totalRevenues = 0;
-            for (elemento of array){
-                totalRevenues += Number(elemento.price)*Number(elemento.estimate)
-            }
-            return totalRevenues / array.length;
-        }
-        
-        let asistenciaFutura = averageAssistance(eventosFuturosArray);
-        console.log("Estimate Futuros: ")
-        console.log("%",asistenciaFutura)
-        
-        let asistenciaPasada = averageAssistance(eventosPasadosArray);
-        console.log("Assistance Pasados: ")
-        console.log("%",asistenciaPasada)
-        
-        function averageAssistance(array) {
-            let totalEstimate = 0;
-            let totalAssistance = 0;
-            for(elemento of array){
-                totalEstimate += Number(elemento.estimate) / Number(elemento.capacity);
-                totalAssistance += Number(elemento.assistance) / Number(elemento.capacity);
-            }
-            console.log("Estimate: ",totalEstimate)
-            console.log("Assistance", totalAssistance)
-        
-            if(totalEstimate > 0){
-                return (totalEstimate / array.length * 100).toFixed(2);
-            } else {
-                return (totalAssistance / array.length * 100).toFixed(2);
-            }
-        }
-        */
-
-
-
+    // Función que crea una Fila para las tablas 2 y 3 en base a un elemento
+    function crearFila(elemento){
+        let fila = document.createElement('tr')
+        fila.innerHTML = `    
+                <td>${elemento.category} </td>
+                <td class="text-center">$${elemento.revenue.toFixed(2)} </td>
+                <td class="text-center">%${elemento.attendance.toFixed(2)} </td>
+                `
+        return fila;
+    }
 }

@@ -230,11 +230,7 @@ article div p {
     .card {
         margin: 1rem;
     }
-
-    .input--search {
-        margin-bottom: 1rem;
-    }
-
+    
     .contact--main, .stats--main {
         min-height: 60vh;
         padding-top: 2rem;
@@ -263,10 +259,6 @@ article div p {
         margin: 1rem;
     }
 
-    .input--search {
-        margin-bottom: 1rem;
-    }
-
     .contact--main, .stats--main {
         min-height: 60vh;
     }
@@ -289,10 +281,6 @@ article div p {
     
     .card {
         margin: 1rem;
-    }
-
-    .input--search {
-        margin-bottom: 1rem;
     }
 
     .contact--main, .stats--main {
