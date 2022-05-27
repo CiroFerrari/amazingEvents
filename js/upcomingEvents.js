@@ -1,15 +1,24 @@
 // DECLARACIÓN DE VARIABLES GLOBALES
 let divContenedorCards = document.getElementById("mainCards");  
-let contenidoCards = data.eventos;
-let fechaActual = data.fechaActual;
+let data;
+let contenidoCards = [];
+let fechaActual = "";
 let inputSearch = document.getElementById('searchInput');
 let buttonSearch = document.getElementById('searchButton');
 let cardsBuscadas = [];
 let checkBoxesActivos = [];
 let categoriasFiltradas = [];
 
-// CREACIÓN DE ID PARA CADA CARD
-contenidoCards.map((evento, id) => evento.id = ++id);
+// FUNCIÓN ASÍNCRONA QUE OBTIENE DATOS DE API Y EJECUTA EN BASE A ESOS DATOS
+getDatafromAPI();
+async function getDatafromAPI() {
+    await fetch("https://amazing-events.herokuapp.com/api/events")
+        .then(response => response.json())
+        .then(json => data = json);
+
+// Extraemos los eventos del Objeto "data"
+contenidoCards = data.events;
+fechaActual = data.currentDate;
 
 // FILTRAR EVENTOS FUTUROS DEL TOTAL DE EVENTOS
 contenidoCards = eventosFuturos(contenidoCards);
@@ -38,9 +47,6 @@ function filtrar () {
     else if ( inputValue != "" && checkBoxesActivos.length == 0){   // Filtra si input de búsqueda tiene valor y checkboxes están vacíos
         cardsBuscadas = contenidoCards.filter( evento => evento.name.toLowerCase().trim().startsWith(inputValue));
         impresionCards(cardsBuscadas);
-        if(cardsBuscadas.length == 0) {
-            imprimirSinResultados();
-        }
         }
     else if ( inputValue == "" && checkBoxesActivos.length != 0){   // Filtra si input de búsqueda está vacío y checkboxes están activos
         for (elemento of checkBoxesActivos){
@@ -51,9 +57,6 @@ function filtrar () {
             }
         }
         impresionCards(cardsBuscadas);
-        if(cardsBuscadas.length == 0) {
-            imprimirSinResultados();
-        }
         }
     else if ( inputValue != "" && checkBoxesActivos.length != 0){   // Filtra si input de búsqueda y checkboxes están activos
         for (elemento of checkBoxesActivos){
@@ -65,9 +68,6 @@ function filtrar () {
         }        
         cardsBuscadas = cardsBuscadas.filter( evento => evento.name.toLowerCase().trim().startsWith(inputValue));
         impresionCards(cardsBuscadas);
-        if(cardsBuscadas.length == 0) {
-            imprimirSinResultados();
-        }
         }
 }
 
@@ -84,13 +84,19 @@ function impresionCards(arrayImprimir){
                                 <p class="card-title text-center">${arrayImprimir[i].description}</p>
                                 <div class="mt-4 d-flex justify-content-around align-items-center">
                                     <p class="card-text m-0">Precio: $${arrayImprimir[i].price}</p>
-                                    <a href="./details.html?id=${arrayImprimir[i].id}" class="btn a-btn text-light">Ver más</a>
+                                    <a href="./details.html?id=${arrayImprimir[i]._id}" class="btn a-btn text-light">More Info</a>
                                 </div>
                             </div>
                         </div>
                         `   ;
         divContenedorCards.appendChild(card);
-    }    
+    }  
+    if(arrayImprimir.length == 0) {
+        let mensaje = document.createElement("div");
+        mensaje.innerHTML = `<p class="fs-5 text-center mt-5">No results. Please try with another search :)</p>
+                        `   ;
+        divContenedorCards.appendChild(mensaje);   
+    }  
 }
 
 // Función para imprimir los checkboxes en base a las categorías de las Cards
@@ -134,10 +140,6 @@ function eventosFuturos(array) {
     return arrayFuturo;
 }
 
-// Función para mostrar un mensaje cuando el resultado de la búsqueda es nulo
-function imprimirSinResultados() {
-    let mensaje = document.createElement("div");
-        mensaje.innerHTML = `<p class="fs-5 text-center mt-5">Sin resultados para su búsqueda.</p>
-                        `   ;
-        divContenedorCards.appendChild(mensaje);   
 }
+
+

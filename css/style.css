@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+body {
+    min-height: 100vh;
+    
+}
+
 nav {
     height: 15vh;
 }
@@ -81,6 +86,7 @@ header a {
 }
 
 main {
+    flex-grow: 1;
     height: 100%;
 }
 
